@@ -17,8 +17,7 @@ public class Graph {
 				{0,0,0,6,7,0}
 			});
 		testGraph.printGraphMatrix();
-		
-		
+
 	}
 	
 	public Graph(int[][] graphMatrix) {
@@ -52,7 +51,7 @@ public class Graph {
 		
 	}
 	
-	private boolean isValidGraphMatrix(int[][] graphMatrix) {
+	public static boolean isValidGraphMatrix(int[][] graphMatrix) {
 		boolean good = true;
 		int width = graphMatrix.length;
 		int height = graphMatrix[0].length;
@@ -62,14 +61,14 @@ public class Graph {
 		return good;
 	}
 	
-	private void printGraphMatrix() {
+	public void printGraphMatrix() {
 		int[][] graphMatrix = new int[this.allNodes.length][this.allNodes.length];
 		
 		for(int i=0;i<this.allNodes.length;i++) {
 			Node curNode = this.allNodes[i];
 			for(int j=0;j<this.allNodes.length;j++) {
 				if(curNode.getNodes().containsKey(this.allNodes[j])) {
-					graphMatrix[i][j] = curNode.getNodes().get(this.allNodes[j]);
+					graphMatrix[i][j] = curNode.getNodes().get(this.allNodes[j])[0];
 				}
 			}
 		}
@@ -81,33 +80,9 @@ public class Graph {
 			System.out.println();
 		}
 	}
-	/*
-	public void printGraphMatrix() {
-		TreeSet<Node> nodes = new TreeSet<Node>();
-		nodes.add(this.startNode);
-		Stack<Node> toVisit = new Stack<Node>();
-		toVisit.push(this.startNode);
-		//add all the nodes to treeset usinig breadth first search
-		while(!toVisit.isEmpty()) {
-			Node curNode = toVisit.pop();
-			for(Iterator<Node> it = curNode.getNodes().keySet().iterator();it.hasNext();) {
-				Node curChild = it.next();
-				if(
-					!nodes.contains(curChild) && 
-					!toVisit.contains(curChild) &&
-					curChild != this.sinkNode
-				) {
-					toVisit.push(curChild);
-				}
-				nodes.add(curChild);
-			}
-		}
-		nodes.add(this.sinkNode);
-		//now print all the weights of each node
-		for (Node curNode: nodes){
-			
-		}
+
+	public void flow() {
 		
 	}
-	*/
+	
 }
