@@ -1,0 +1,28 @@
+
+	public void printGraphMatrix() {
+		TreeSet<Node> nodes = new TreeSet<Node>();
+		nodes.add(this.startNode);
+		Stack<Node> toVisit = new Stack<Node>();
+		toVisit.push(this.startNode);
+		//add all the nodes to treeset usinig breadth first search
+		while(!toVisit.isEmpty()) {
+			Node curNode = toVisit.pop();
+			for(Iterator<Node> it = curNode.getNodes().keySet().iterator();it.hasNext();) {
+				Node curChild = it.next();
+				if(
+					!nodes.contains(curChild) && 
+					!toVisit.contains(curChild) &&
+					curChild != this.sinkNode
+				) {
+					toVisit.push(curChild);
+				}
+				nodes.add(curChild);
+			}
+		}
+		nodes.add(this.sinkNode);
+		//now print all the weights of each node
+		for (Node curNode: nodes){
+			
+		}
+		
+	}
