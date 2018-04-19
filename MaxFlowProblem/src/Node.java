@@ -2,8 +2,30 @@ import java.util.*;
 
 
 public class Node {
-	HashMap<Node,int[]> childNodes;
+	private HashMap<Node,int[]> childNodes;
+	private String name;
+	
+	public static void main(String[] args) {
+		Node testNode1 = new Node();
+		Node testNode2 = new Node();
+		testNode1.addNode(testNode2, 5);
+		if(testNode1.isCritical(testNode2)) {
+			System.out.println("Critical!");
+		}
+		else {
+			System.out.println("not critical");
+		}
+		testNode1.use(testNode2, 5);
+		if(testNode1.isCritical(testNode2)) {
+			System.out.println("Critical!");
+		}
+		else {
+			System.out.println("not critical");
+		}
+	}
+	
 	public Node() {
+		name = "NULL";
 		childNodes = new HashMap<Node,int[]>();
 	}
 	
@@ -40,16 +62,28 @@ public class Node {
 	public void use(Node nextNode, int flow) {
 		if(childNodes.containsKey(nextNode)) {
 			int[] values = childNodes.get(nextNode);
-			if(values[0] <= values[1] + flow) {
+			if(values[0] >= values[1] + flow) {
 				values[1] += flow;
 			}
 			else {
-				System.err.println("OVER FLOW!");
+				System.out.println("OVER FLOW!");
 			}
 		}
 		else {
-			System.err.println("no such child found");
+			System.out.println("no such child found");
 		}
 		
+	}
+	
+	public boolean isCritical(Node nextNode) {
+		boolean critical=false;
+		if(remainingCapacity(nextNode) == 0) {
+			critical = true;
+		}
+		return critical;
+	}
+
+	public void name(String name) {
+		this.name = name;
 	}
 }
