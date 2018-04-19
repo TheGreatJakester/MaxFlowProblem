@@ -7,7 +7,7 @@ public class Graph {
 	private Node[] allNodes;
 	
 	public static void main(String[] args) {
-		int[][] testMatirx1 = new int[][]
+		int[][] testMatrix1 = new int[][]
 			{
 				{0,0,0,0,0,0},
 				{1,0,0,0,0,0},
@@ -18,11 +18,11 @@ public class Graph {
 			};
 		int[][] testMatrix2 = new int[][]
 				{	//A, B, C, D, E, F, G, H 
-					{ 0,14, 0, 0, 0, 0, 0, 0}, //A
+					{ 0, 0, 0, 0, 0, 0, 0, 0}, //A
 					{ 5, 0, 0, 0, 0, 0, 0, 0}, //B
 					{ 7, 0, 0, 0, 0, 0, 0, 0}, //C
 					{20, 0, 0, 0, 0, 0, 0, 0}, //D
-					{ 0, 0, 6, 0, 0, 0, 0, 0}, //E
+					{ 0, 14, 6, 0, 0, 0, 0, 0}, //E
 					{ 0, 0,10, 0, 0, 0, 0, 0}, //F
 					{ 0, 0, 0,13, 0,15, 0, 0}, //G
 					{ 0, 0, 0, 0,11, 8,12, 0}, //H
@@ -31,17 +31,22 @@ public class Graph {
 		
 		Graph testGraph = new Graph(testMatrix2);
 		testGraph.printGraphMatrix();
+		System.out.println();
 		
-		ArrayList<Node> path = testGraph.shortestPathWithoutCritical(testGraph.startNode, new ArrayList<Node>());
+		
+		ArrayList<Node> path = testGraph.shortestPathWithoutCritical();
 		for(int i = 0;i<testGraph.allNodes.length;i++) {
 			if(path.contains(testGraph.allNodes[i])) {
 				System.out.println(i);
 			}
 		}
 		
+		
 
 		testGraph.flow();
-		testGraph.printFlow();
+		testGraph.printFlow(); 
+		
+		System.out.println("Finished");
 	}
 	
 	public Graph(int[][] graphMatrix) {
@@ -98,19 +103,19 @@ public class Graph {
 		
 		for(int i=0;i<graphMatrix.length;i++) {
 			for(int j =0;j<graphMatrix[0].length;j++) {
-				System.out.print(graphMatrix[j][i]);
+				System.out.print(graphMatrix[j][i]+"\t");
 			}
 			System.out.println();
 		}
 	}
 
 	public void flow() {
-		ArrayList<Node> curPath = shortestPathWithoutCritical(this.startNode, new ArrayList<Node>());
+		ArrayList<Node> curPath = shortestPathWithoutCritical();
 		int min;
 		while(curPath != null) {
 			min = minAbility(curPath);
 			augmentPath(curPath,min);
-			curPath = shortestPathWithoutCritical(this.startNode, new ArrayList<Node>());
+			curPath = shortestPathWithoutCritical();
 		}
 	}
 	
@@ -128,7 +133,7 @@ public class Graph {
 		
 		for(int i=0;i<graphMatrix.length;i++) {
 			for(int j =0;j<graphMatrix[0].length;j++) {
-				System.out.print(graphMatrix[j][i]);
+				System.out.print(graphMatrix[j][i]+"\t");
 			}
 			System.out.println();
 		}
@@ -172,26 +177,75 @@ public class Graph {
 		System.out.println();
 	}
 	
-	private ArrayList<Node> shortestPathWithoutCritical(Node currentNode, ArrayList<Node> pathToNow){
-		ArrayList<Node> pathToNowCopy = new ArrayList<Node>(pathToNow);
-		pathToNowCopy.add(currentNode);
-		ArrayList<Node> shortest = null;
-		for(Iterator<Node> it=currentNode.getNodes().keySet().iterator();it.hasNext();) {
-			Node curChild = it.next();
-			if(!currentNode.isCritical(curChild)) {
-				if(curChild == this.sinkNode) {
-					pathToNowCopy.add(curChild);
-					return pathToNowCopy;
+	private ArrayList<Node> shortestPathWithoutCritical(){
+		class Searchable{
+			public Node node;
+			public ArrayList<Node> path;
+			public Searchable(Node node,ArrayList<Node> path) {
+				this.node = node;
+				this.path = path;
+			}
+			public ArrayList<Searchable> getNext(){
+				ArrayList<Searchable> nexts = new ArrayList<Searchable>();
+				for(Node n:node.getNodes().keySet()) {
+					if(!node.isCritical(n)) {
+						ArrayList<Node> newPath = (ArrayList<Node>) path.clone();
+						newPath.add(node);
+						nexts.add(new Searchable(n,newPath));
+					}
 				}
-				if(shortest == null) {
-					shortest = shortestPathWithoutCritical(curChild,pathToNowCopy);
+				return nexts;
+			}
+			
+			@Override
+			public boolean equals(Object s) {
+				
+				Searchable casted; 
+				if(s.getClass() == Searchable.class) {
+					casted = (Searchable) s;
 				}
-				else if(shortestPathWithoutCritical(curChild,pathToNowCopy).size() < shortest.size()) {
-					shortest = shortestPathWithoutCritical(curChild,pathToNowCopy);
+				else {
+					return false;
+				}
+				if(casted.node == this.node) {
+					return true;
+				}
+				else {
+					return false;
+				}				
+			}
+			
+		}
+	
+		LinkedList<Searchable> searchList = new LinkedList<Searchable>();
+		searchList.push(new Searchable(this.startNode,new ArrayList<Node>()));
+		ArrayList<Searchable> visited = new ArrayList<Searchable>();
+		
+		while(!searchList.isEmpty()) {
+			Searchable curSearch = searchList.poll();
+			if(visited.contains(curSearch)) {
+				continue;
+			}
+			for(Searchable s:curSearch.getNext()) {
+				if(s.node == this.sinkNode) {
+					//found the shortest
+					ArrayList<Node> out =(ArrayList<Node>) s.path.clone();
+					out.add(this.sinkNode);
+					return out;
+				}
+				// keep looking for the shortest
+				else if(searchList.contains(s)) {
+					searchList.remove(s);
+					searchList.push(s);
+				}
+				else {
+					searchList.push(s);
 				}
 			}
+			visited.add(curSearch);
 		}
-		return shortest;
+		// no path was found
+		return null;
 	}
 	
 }
