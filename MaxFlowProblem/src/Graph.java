@@ -7,7 +7,7 @@ public class Graph {
 	private Node[] allNodes;
 	
 	public static void main(String[] args) {
-		Graph testGraph = new Graph(new int[][]
+		int[][] testMatirx1 = new int[][]
 			{
 				{0,0,0,0,0,0},
 				{1,0,0,0,0,0},
@@ -15,7 +15,21 @@ public class Graph {
 				{0,3,0,0,0,0},
 				{0,4,5,0,0,0},
 				{0,0,0,6,7,0}
-			});
+			};
+		int[][] testMatrix2 = new int[][]
+				{	//A, B, C, D, E, F, G, H 
+					{ 0,14, 0, 0, 0, 0, 0, 0}, //A
+					{ 5, 0, 0, 0, 0, 0, 0, 0}, //B
+					{ 7, 0, 0, 0, 0, 0, 0, 0}, //C
+					{20, 0, 0, 0, 0, 0, 0, 0}, //D
+					{ 0, 0, 6, 0, 0, 0, 0, 0}, //E
+					{ 0, 0,10, 0, 0, 0, 0, 0}, //F
+					{ 0, 0, 0,13, 0,15, 0, 0}, //G
+					{ 0, 0, 0, 0,11, 8,12, 0}, //H
+					
+				};
+		
+		Graph testGraph = new Graph(testMatrix2);
 		testGraph.printGraphMatrix();
 		
 		ArrayList<Node> path = testGraph.shortestPathWithoutCritical(testGraph.startNode, new ArrayList<Node>());
