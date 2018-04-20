@@ -50,14 +50,14 @@ public class Graph {
 	}
 	
 	public Graph(int[][] graphMatrix) {
-		parseMatrix(graphMatrix);
-	}
-	
-	private void parseMatrix(int[][] graphMatrix) {
 		if(!isValidGraphMatrix(graphMatrix)) {
 			System.err.println("This matrix isn't square");
 			return;
 		}
+		parseMatrix(graphMatrix);
+	}
+	
+	private void parseMatrix(int[][] graphMatrix) {
 		//initialize all the nodes
 		Node[] nodes = new Node[graphMatrix.length];
 		for(int i=0;i<nodes.length;i++) {
@@ -79,35 +79,7 @@ public class Graph {
 		this.allNodes = nodes;
 	}
 	
-	public static boolean isValidGraphMatrix(int[][] graphMatrix) {
-		boolean good = true;
-		int width = graphMatrix.length;
-		int height = graphMatrix[0].length;
-		if(width != height) {
-			good = false;
-		}
-		return good;
-	}
-	
-	public void printGraphMatrix() {
-		int[][] graphMatrix = new int[this.allNodes.length][this.allNodes.length];
-		
-		for(int i=0;i<this.allNodes.length;i++) {
-			Node curNode = this.allNodes[i];
-			for(int j=0;j<this.allNodes.length;j++) {
-				if(curNode.getNodes().containsKey(this.allNodes[j])) {
-					graphMatrix[i][j] = curNode.getNodes().get(this.allNodes[j])[0];
-				}
-			}
-		}
-		
-		for(int i=0;i<graphMatrix.length;i++) {
-			for(int j =0;j<graphMatrix[0].length;j++) {
-				System.out.print(graphMatrix[j][i]+"\t");
-			}
-			System.out.println();
-		}
-	}
+
 
 	public void flow() {
 		ArrayList<Node> curPath = shortestPathWithoutCritical();
@@ -119,25 +91,6 @@ public class Graph {
 		}
 	}
 	
-	public void printFlow() {
-		int[][] graphMatrix = new int[this.allNodes.length][this.allNodes.length];
-		
-		for(int i=0;i<this.allNodes.length;i++) {
-			Node curNode = this.allNodes[i];
-			for(int j=0;j<this.allNodes.length;j++) {
-				if(curNode.getNodes().containsKey(this.allNodes[j])) {
-					graphMatrix[i][j] = curNode.getNodes().get(this.allNodes[j])[1];
-				}
-			}
-		}
-		
-		for(int i=0;i<graphMatrix.length;i++) {
-			for(int j =0;j<graphMatrix[0].length;j++) {
-				System.out.print(graphMatrix[j][i]+"\t");
-			}
-			System.out.println();
-		}
-	}
 	
 	private int minAbility(ArrayList<Node> shortestPath) {
 		int min = 1000;
@@ -159,23 +112,7 @@ public class Graph {
 		}
 	}
 	
-	private String nn(Node n) {
-		for(int i=0;i<this.allNodes.length;i++) {
-			if(n == this.allNodes[i]) {
-				return Integer.toString(i);
-			}
-		}
-		return null;
-	}
-	
-	private void printPath(ArrayList<Node> path) {
-		for(int i = 0; i < this.allNodes.length;i++) {
-			if(path.contains(this.allNodes[i])) {
-				System.out.print(i);
-			}
-		}
-		System.out.println();
-	}
+
 	
 	private ArrayList<Node> shortestPathWithoutCritical(){
 		class Searchable{
@@ -248,4 +185,71 @@ public class Graph {
 		return null;
 	}
 	
+	public static boolean isValidGraphMatrix(int[][] graphMatrix) {
+		boolean good = true;
+		int width = graphMatrix.length;
+		int height = graphMatrix[0].length;
+		if(width != height) {
+			good = false;
+		}
+		return good;
+	}
+	
+	public void printGraphMatrix() {
+		int[][] graphMatrix = new int[this.allNodes.length][this.allNodes.length];
+		
+		for(int i=0;i<this.allNodes.length;i++) {
+			Node curNode = this.allNodes[i];
+			for(int j=0;j<this.allNodes.length;j++) {
+				if(curNode.getNodes().containsKey(this.allNodes[j])) {
+					graphMatrix[i][j] = curNode.getNodes().get(this.allNodes[j])[0];
+				}
+			}
+		}
+		
+		for(int i=0;i<graphMatrix.length;i++) {
+			for(int j =0;j<graphMatrix[0].length;j++) {
+				System.out.print(graphMatrix[j][i]+"\t");
+			}
+			System.out.println();
+		}
+	}
+	
+	public void printFlow() {
+		int[][] graphMatrix = new int[this.allNodes.length][this.allNodes.length];
+		
+		for(int i=0;i<this.allNodes.length;i++) {
+			Node curNode = this.allNodes[i];
+			for(int j=0;j<this.allNodes.length;j++) {
+				if(curNode.getNodes().containsKey(this.allNodes[j])) {
+					graphMatrix[i][j] = curNode.getNodes().get(this.allNodes[j])[1];
+				}
+			}
+		}
+		
+		for(int i=0;i<graphMatrix.length;i++) {
+			for(int j =0;j<graphMatrix[0].length;j++) {
+				System.out.print(graphMatrix[j][i]+"\t");
+			}
+			System.out.println();
+		}
+	}
+	
+	private String nn(Node n) {
+		for(int i=0;i<this.allNodes.length;i++) {
+			if(n == this.allNodes[i]) {
+				return Integer.toString(i);
+			}
+		}
+		return null;
+	}
+	
+	private void printPath(ArrayList<Node> path) {
+		for(int i = 0; i < this.allNodes.length;i++) {
+			if(path.contains(this.allNodes[i])) {
+				System.out.print(i);
+			}
+		}
+		System.out.println();
+	}
 }
